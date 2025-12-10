@@ -1,7 +1,9 @@
 package com.example.eventappmanagement.data.remote.response
 
 import com.example.eventappmanagement.data.model.Event
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SingleEventResponse(
     val status: Int,
     val message: String? = null,

@@ -5,11 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.eventappmanagement.ui.screen.AllEventsScreen
+import com.example.eventappmanagement.ui.screen.EventByIdScreen
 import com.example.eventappmanagement.ui.screen.HomeScreen
 
 object NavRoutes {
     const val HOME = "home"
     const val ALL_EVENTS = "all_events"
+    const val EVENT_BY_ID = "event_by_id/{id}"
 }
 
 
@@ -26,6 +28,17 @@ fun AppNavigation(nav: NavHostController) {
                 }
             )
         }
+
+        composable(NavRoutes.EVENT_BY_ID) { backStack ->
+            val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
+            EventByIdScreen(
+                id = id,
+                onEventClick = { eventId ->
+                    nav.navigate("event_detail/$eventId")
+                }
+            )
+        }
+
 
 
     }
