@@ -3,6 +3,7 @@ package com.example.eventappmanagement
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eventappmanagement.data.remote.request.EventRequest
 import com.example.eventappmanagement.data.repository.EventRepository
 import com.example.eventappmanagement.data.result.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +42,39 @@ class EventViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("EventViewModel", "Date range error", e)
                 _events.value = ApiResult.Error(e.message ?: "Failed to load events")
+            }
+        }
+    }
+
+    fun updateEvent(id: Int, request: EventRequest) {
+        viewModelScope.launch {
+            try {
+                repo.updateEvent(id, request)
+                _events.value = ApiResult.Loading
+                loadEvents()
+            } catch (e: Exception) {
+                Log.e("EventViewModel", "Update failed", e)
+                _events.value = ApiResult.Error(e.message ?: "Update failed")
+            }
+        }
+    }
+
+    fun deleteEvent(id: Int, onDeleteComplete: () -> Unit) {
+        viewModelScope.launch {
+            _events.value = ApiResult.Loading
+            try {
+                val result = repo.deleteEvent(id)
+                if (result is ApiResult.Success) {
+                    Log.d("EventViewModel", "Delete successful: $id")
+                    loadEvents()
+                    onDeleteComplete()
+                } else if (result is ApiResult.Error) {
+                    Log.e("EventViewModel", "Delete failed: ${result.message}")
+                    _events.value = ApiResult.Error(result.message ?: "Delete failed")
+                }
+            } catch (e: Exception) {
+                Log.e("EventViewModel", "Delete failed", e)
+                _events.value = ApiResult.Error(e.message ?: "Delete failed")
             }
         }
     }
