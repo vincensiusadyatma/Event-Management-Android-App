@@ -1,5 +1,6 @@
 package com.example.eventappmanagement.data.repository
 
+import android.util.Log
 import com.example.eventappmanagement.data.di.AppModuleInjection
 import com.example.eventappmanagement.data.remote.api.ApiService
 import com.example.eventappmanagement.data.remote.request.EventRequest
@@ -50,5 +51,19 @@ class EventRepository {
 
     suspend fun updateEvent(id: Int, request: EventRequest) {
         api.updateEvent(id, request)
+    }
+
+    suspend fun deleteEvent(id: Int): ApiResult<SingleEventResponse> {
+        return try {
+            val response = api.deleteEvent(id)
+            ApiResult.Success(response)
+        } catch (e: retrofit2.HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            Log.e("EventRepository", "HTTP ${e.code()} Error: $errorBody", e)
+            ApiResult.Error(e.message ?: "Delete failed")
+        } catch (e: Exception) {
+            Log.e("EventRepository", "Delete failed", e)
+            ApiResult.Error(e.message ?: "Delete failed")
+        }
     }
 }

@@ -77,7 +77,10 @@ fun DetailEventScreen(
                     // Tombol Hapus
                     Button(
                         onClick = {
-
+                            viewModel.deleteEvent(eventId) {
+                                // Callback setelah delete berhasil
+                                onBack()
+                            }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {

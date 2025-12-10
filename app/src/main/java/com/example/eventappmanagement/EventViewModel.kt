@@ -58,4 +58,24 @@ class EventViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteEvent(id: Int, onDeleteComplete: () -> Unit) {
+        viewModelScope.launch {
+            _events.value = ApiResult.Loading
+            try {
+                val result = repo.deleteEvent(id)
+                if (result is ApiResult.Success) {
+                    Log.d("EventViewModel", "Delete successful: $id")
+                    loadEvents()
+                    onDeleteComplete()
+                } else if (result is ApiResult.Error) {
+                    Log.e("EventViewModel", "Delete failed: ${result.message}")
+                    _events.value = ApiResult.Error(result.message ?: "Delete failed")
+                }
+            } catch (e: Exception) {
+                Log.e("EventViewModel", "Delete failed", e)
+                _events.value = ApiResult.Error(e.message ?: "Delete failed")
+            }
+        }
+    }
 }
