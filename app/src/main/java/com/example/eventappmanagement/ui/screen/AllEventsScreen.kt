@@ -1,5 +1,6 @@
 package com.example.eventappmanagement.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -57,13 +58,21 @@ fun AllEventsScreen(
                     .fillMaxWidth()
             )
 
-            is ApiResult.Error -> Text(
-                "Error: ${(state as ApiResult.Error).message}",
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            )
+            is ApiResult.Error ->
+
+            {
+
+                Log.e("ERROR FETCH:" , "${(state as ApiResult.Error).message}")
+                Text(
+                    "Error: ${(state as ApiResult.Error).message}",
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+
 
             is ApiResult.Success -> {
                 val response = (state as ApiResult.Success<*>).data as? MultiEventResponse

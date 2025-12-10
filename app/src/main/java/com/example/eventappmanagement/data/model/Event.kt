@@ -12,4 +12,5 @@ data class Event(
     val description: String? = null,
     val capacity: Int? = null,
     val status: String
+
 )
