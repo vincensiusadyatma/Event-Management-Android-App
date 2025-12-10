@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.eventappmanagement.ui.screen.AllEventsScreen
+import com.example.eventappmanagement.ui.screen.HomeScreen
 
 object NavRoutes {
     const val HOME = "home"
@@ -15,11 +17,16 @@ object NavRoutes {
 fun AppNavigation(nav: NavHostController) {
     NavHost(navController = nav, startDestination = NavRoutes.HOME) {
 
+        composable(NavRoutes.HOME) { HomeScreen(nav) }
+
         composable(NavRoutes.ALL_EVENTS) {
-             { eventId : Int ->
-                nav.navigate("event_detail/$eventId")
-            }
+            AllEventsScreen(
+                onEventClick = { eventId ->
+                    nav.navigate("event_detail/$eventId")
+                }
+            )
         }
+
 
     }
 }
