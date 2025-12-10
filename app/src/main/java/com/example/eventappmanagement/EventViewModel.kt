@@ -19,4 +19,11 @@ class EventViewModel : ViewModel() {
             _events.value = repo.getAllEvents()
         }
     }
+
+    fun searchEventById(id: Int) {
+        viewModelScope.launch {
+            _events.value = ApiResult.Loading
+            _events.value = repo.getEventById(id)
+        }
+    }
 }
