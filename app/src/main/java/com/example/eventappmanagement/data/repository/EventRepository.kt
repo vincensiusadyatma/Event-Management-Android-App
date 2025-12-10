@@ -37,4 +37,13 @@ class EventRepository {
             ApiResult.Error("Terjadi kesalahan sistem: ${e.localizedMessage ?: "Unknown error"}")
         }
     }
+
+    suspend fun getEventsByDateRange(dateFrom: String, dateTo: String): ApiResult<MultiEventResponse> {
+        return try {
+            val response = api.getEventsByDateRange(dateFrom, dateTo)
+            ApiResult.Success(response)
+        } catch (e: Exception) {
+            ApiResult.Error(e.message ?: "Unknown error")
+        }
+    }
 }

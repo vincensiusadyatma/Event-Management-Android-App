@@ -66,10 +66,10 @@ fun EventByIdScreen(
 
                 when {
                     idInt == null -> {
-                        message = "⚠️ Masukkan angka yang valid"
+                        message = "Masukkan angka yang valid"
                     }
                     idInt == 0 -> {
-                        message = "ℹ️ Event dengan ID 0 tidak ditemukan"
+                        message = "Event dengan ID 0 tidak ditemukan"
                     }
                     else -> {
                         viewModel.searchEventById(idInt)

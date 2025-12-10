@@ -13,5 +13,11 @@ interface ApiService {
     @GET("api.php")
     suspend fun getEventById(@Query("id") id: Int): SingleEventResponse
 
+    @GET("api.php")
+    suspend fun getEventsByDateRange(
+        @Query("date_from") dateFrom: String,
+        @Query("date_to") dateTo: String
+    ): MultiEventResponse
+
 
 }
