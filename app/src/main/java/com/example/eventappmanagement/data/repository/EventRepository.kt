@@ -66,4 +66,13 @@ class EventRepository {
             ApiResult.Error(e.message ?: "Delete failed")
         }
     }
+
+    suspend fun createEvent(request: EventRequest): ApiResult<SingleEventResponse> {
+        return try {
+            val response = api.createEvent(request)
+            ApiResult.Success(response)
+        } catch (e: Exception) {
+            ApiResult.Error(e.localizedMessage ?: "Create event failed")
+        }
+    }
 }

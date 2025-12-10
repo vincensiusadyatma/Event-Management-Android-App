@@ -46,6 +46,13 @@ fun HomeScreen(nav: NavController) {
             Text("Cari Event Berdasarkan Date Range")
         }
 
+        Button(
+            onClick = { nav.navigate(NavRoutes.CREATE_EVENT) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Tambah Event")
+        }
+
 
     }
 

@@ -79,5 +79,50 @@ class EventViewModel : ViewModel() {
         }
     }
 
+    fun createEvent(
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        description: String,
+        capacity: Int,
+        status: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val request = EventRequest(
+                    title = title,
+                    date = date,
+                    time = time,
+                    location = location,
+                    description = description,
+                    capacity = capacity,
+                    status = status
+                )
+
+                val result = repo.createEvent(request)
+
+                when (result) {
+                    is ApiResult.Success -> {
+                        val response = result.data
+                        if (response.status == 1) {
+                            callback(true, response.message ?: "Success")
+                        } else {
+                            callback(false, response.message ?: "Failed")
+                        }
+                    }
+                    is ApiResult.Error -> {
+                        callback(false, result.message ?: "Unknown error")
+                    }
+                    else -> Unit
+                }
+
+            } catch (e: Exception) {
+                callback(false, e.localizedMessage ?: "Unknown error")
+            }
+        }
+    }
+
 
 }
