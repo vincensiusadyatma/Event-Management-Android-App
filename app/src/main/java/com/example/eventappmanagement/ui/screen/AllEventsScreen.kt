@@ -59,9 +59,7 @@ fun AllEventsScreen(
             )
 
             is ApiResult.Error ->
-
             {
-
                 Log.e("ERROR FETCH:" , "${(state as ApiResult.Error).message}")
                 Text(
                     "Error: ${(state as ApiResult.Error).message}",

@@ -71,6 +71,9 @@ fun EventByDateRangeScreen(
     var toMonth by remember { mutableStateOf("01") }
     var toYear by remember { mutableStateOf("2025") }
 
+
+    var isSearchTriggered by remember { mutableStateOf(false) }
+
     val eventState by viewModel.events.collectAsState()
 
     Column(
@@ -106,9 +109,9 @@ fun EventByDateRangeScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        // SEARCH BUTTON
         Button(
             onClick = {
+                isSearchTriggered = true  // User menekan Search
                 val start = "$fromYear-$fromMonth-$fromDay"
                 val end = "$toYear-$toMonth-$toDay"
                 viewModel.getEventsByDateRange(start, end)
@@ -120,44 +123,42 @@ fun EventByDateRangeScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        // RESULT LIST
-        when (eventState) {
-            is ApiResult.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+
+        if (isSearchTriggered) {
+            when (eventState) {
+                is ApiResult.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
-            }
 
-            is ApiResult.Error -> {
-                Text(
-                    text = (eventState as ApiResult.Error).message ?: "Terjadi kesalahan",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            is ApiResult.Success -> {
-                val response = (eventState as ApiResult.Success<*>).data as? MultiEventResponse
-                val events: List<Event> = response?.data ?: emptyList()
-
-                if (events.isEmpty()) {
+                is ApiResult.Error -> {
                     Text(
-                        text = "Tidak ada event pada rentang tanggal ini",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        text = (eventState as ApiResult.Error).message ?: "Terjadi kesalahan",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
                     )
-                } else {
-                    LazyColumn {
-                        items(events) { event ->
-                            EventCard(
-                                event = event,
-                                onClick = { event.id?.let { onEventClick(it) } }
-                            )
+                }
+
+                is ApiResult.Success -> {
+                    val response = (eventState as ApiResult.Success<*>).data as? MultiEventResponse
+                    val events = response?.data ?: emptyList()
+
+                    if (events.isEmpty()) {
+                        Text("Tidak ada event pada rentang tanggal ini")
+                    } else {
+                        LazyColumn {
+                            items(events) { event ->
+                                EventCard(
+                                    event = event,
+                                    onClick = { event.id?.let { onEventClick(it) } }
+                                )
+                            }
                         }
                     }
                 }
@@ -165,3 +166,4 @@ fun EventByDateRangeScreen(
         }
     }
 }
+
