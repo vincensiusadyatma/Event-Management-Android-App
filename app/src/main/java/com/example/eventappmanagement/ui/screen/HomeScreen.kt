@@ -32,6 +32,20 @@ fun HomeScreen(nav: NavController) {
             Text("Tampilkan Semua Event")
         }
 
+        Button(
+            onClick = { nav.navigate("event_by_id/0") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Cari Event Berdasarkan ID")
+        }
+
+        Button(
+            onClick = { nav.navigate(NavRoutes.EVENT_BY_DATE) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Cari Event Berdasarkan Date Range")
+        }
+
 
     }
 

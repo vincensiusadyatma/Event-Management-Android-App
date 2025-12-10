@@ -1,11 +1,23 @@
 package com.example.eventappmanagement.data.remote.api
 
 import com.example.eventappmanagement.data.remote.response.MultiEventResponse
+import com.example.eventappmanagement.data.remote.response.SingleEventResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface ApiService {
 
     @GET("api.php")
     suspend fun getEvents(): MultiEventResponse
+
+    @GET("api.php")
+    suspend fun getEventById(@Query("id") id: Int): SingleEventResponse
+
+    @GET("api.php")
+    suspend fun getEventsByDateRange(
+        @Query("date_from") dateFrom: String,
+        @Query("date_to") dateTo: String
+    ): MultiEventResponse
+
 
 }
