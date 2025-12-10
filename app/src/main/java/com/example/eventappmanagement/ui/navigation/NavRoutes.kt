@@ -9,6 +9,7 @@ import com.example.eventappmanagement.ui.screen.DetailEventScreen
 import com.example.eventappmanagement.ui.screen.EventByDateRangeScreen
 import com.example.eventappmanagement.ui.screen.EventByIdScreen
 import com.example.eventappmanagement.ui.screen.HomeScreen
+import com.example.eventappmanagement.ui.screen.UpdateEventScreen
 
 object NavRoutes {
     const val HOME = "home"
@@ -59,6 +60,15 @@ fun AppNavigation(nav: NavHostController) {
                 onBack = { nav.popBackStack() },
                 onUpdate = { id -> nav.navigate("update_event/$id") },
                 onDelete = { id ->  }
+            )
+        }
+
+        composable("update_event/{eventId}") { backStackEntry ->
+            val eventId = backStackEntry.arguments?.getString("eventId")?.toIntOrNull() ?: 0
+            UpdateEventScreen(
+                eventId = eventId,
+                onBack = { nav.popBackStack() },
+                onUpdateComplete = { nav.navigate(NavRoutes.HOME) }
             )
         }
 
