@@ -65,7 +65,7 @@ fun DetailEventScreen(
 
                     Button(
                         onClick = {
-
+                            onUpdate(event.id!!)
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
