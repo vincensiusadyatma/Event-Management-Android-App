@@ -6,6 +6,7 @@ import com.example.eventappmanagement.data.remote.api.ApiService
 import com.example.eventappmanagement.data.remote.request.EventRequest
 import com.example.eventappmanagement.data.remote.response.MultiEventResponse
 import com.example.eventappmanagement.data.remote.response.SingleEventResponse
+import com.example.eventappmanagement.data.remote.response.StatsResponse
 import com.example.eventappmanagement.data.result.ApiResult
 
 class EventRepository {
@@ -73,6 +74,15 @@ class EventRepository {
             ApiResult.Success(response)
         } catch (e: Exception) {
             ApiResult.Error(e.localizedMessage ?: "Create event failed")
+        }
+    }
+
+    suspend fun getStatistics(): ApiResult<StatsResponse> {
+        return try {
+            val response = api.getStatistics()
+            ApiResult.Success(response)
+        } catch (e: Exception) {
+            ApiResult.Error(e.message ?: "Unknown error")
         }
     }
 }

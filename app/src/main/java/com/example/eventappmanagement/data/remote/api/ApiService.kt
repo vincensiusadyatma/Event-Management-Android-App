@@ -3,6 +3,7 @@ package com.example.eventappmanagement.data.remote.api
 import com.example.eventappmanagement.data.remote.request.EventRequest
 import com.example.eventappmanagement.data.remote.response.MultiEventResponse
 import com.example.eventappmanagement.data.remote.response.SingleEventResponse
+import com.example.eventappmanagement.data.remote.response.StatsResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -38,5 +39,9 @@ interface ApiService {
         @Body request: EventRequest
     ): SingleEventResponse
 
+    @GET("api.php")
+    suspend fun getStatistics(
+        @Query("stats") stats: Int = 1
+    ): StatsResponse
 
 }

@@ -3,6 +3,7 @@ package com.example.eventappmanagement
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eventappmanagement.data.model.Stats
 import com.example.eventappmanagement.data.remote.request.EventRequest
 import com.example.eventappmanagement.data.repository.EventRepository
 import com.example.eventappmanagement.data.result.ApiResult
@@ -121,6 +122,31 @@ class EventViewModel : ViewModel() {
             } catch (e: Exception) {
                 callback(false, e.localizedMessage ?: "Unknown error")
             }
+        }
+    }
+
+    private val _stats = MutableStateFlow<Stats?>(null)
+    val stats: StateFlow<Stats?> get() = _stats
+
+    private val _statsLoading = MutableStateFlow(false)
+    val statsLoading: StateFlow<Boolean> get() = _statsLoading
+
+    fun loadStatistics() {
+        viewModelScope.launch {
+            _statsLoading.value = true
+            when (val result = repo.getStatistics()) {
+                is ApiResult.Success -> {
+                    _stats.value = result.data.data
+                }
+                is ApiResult.Error -> {
+                    _stats.value = null
+                }
+                is ApiResult.Loading -> {
+                    _stats.value = null
+                }
+            }
+
+            _statsLoading.value = false
         }
     }
 
