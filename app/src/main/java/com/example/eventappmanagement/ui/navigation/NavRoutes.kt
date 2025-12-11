@@ -1,9 +1,12 @@
 package com.example.eventappmanagement.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.eventappmanagement.EventViewModel
+import com.example.eventappmanagement.ui.screen.AddEventScreen
 import com.example.eventappmanagement.ui.screen.AllEventsScreen
 import com.example.eventappmanagement.ui.screen.DetailEventScreen
 import com.example.eventappmanagement.ui.screen.EventByDateRangeScreen
@@ -17,6 +20,7 @@ object NavRoutes {
     const val EVENT_BY_ID = "event_by_id/{id}"
     const val EVENT_BY_DATE = "event_by_date"
     const val EVENT_DETAIL = "event_detail/{eventId}"
+    const val CREATE_EVENT = "create"
 }
 
 
@@ -69,6 +73,17 @@ fun AppNavigation(nav: NavHostController) {
                 eventId = eventId,
                 onBack = { nav.popBackStack() },
                 onUpdateComplete = { nav.navigate(NavRoutes.HOME) }
+            )
+        }
+
+        composable(NavRoutes.CREATE_EVENT) {
+            val vm: EventViewModel = viewModel()
+            AddEventScreen(
+                viewModel = vm,
+                onBack = { nav.popBackStack() },
+                onSuccess = {
+                    nav.popBackStack()
+                }
             )
         }
 

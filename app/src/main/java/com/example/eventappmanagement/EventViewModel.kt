@@ -3,6 +3,7 @@ package com.example.eventappmanagement
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.eventappmanagement.data.model.Stats
 import com.example.eventappmanagement.data.remote.request.EventRequest
 import com.example.eventappmanagement.data.repository.EventRepository
 import com.example.eventappmanagement.data.result.ApiResult
@@ -46,18 +47,43 @@ class EventViewModel : ViewModel() {
         }
     }
 
-    fun updateEvent(id: Int, request: EventRequest) {
+    fun updateEvent(
+        id: Int,
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        description: String?,
+        capacity: Int,
+        status: String,
+        callback: (Boolean, String) -> Unit
+    ) {
         viewModelScope.launch {
             try {
+                val request = EventRequest(
+                    title = title,
+                    date = date,
+                    time = time,
+                    location = location,
+                    description = description,
+                    capacity = capacity,
+                    status = status
+                )
+
                 repo.updateEvent(id, request)
+
+                // Update ulang daftar event
                 _events.value = ApiResult.Loading
                 loadEvents()
+
+                callback(true, "Event updated successfully")
+
             } catch (e: Exception) {
-                Log.e("EventViewModel", "Update failed", e)
-                _events.value = ApiResult.Error(e.message ?: "Update failed")
+                callback(false, e.message ?: "Failed to update event")
             }
         }
     }
+
 
     fun deleteEvent(id: Int, onDeleteComplete: () -> Unit) {
         viewModelScope.launch {
@@ -78,4 +104,76 @@ class EventViewModel : ViewModel() {
             }
         }
     }
+
+    fun createEvent(
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        description: String,
+        capacity: Int,
+        status: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val request = EventRequest(
+                    title = title,
+                    date = date,
+                    time = time,
+                    location = location,
+                    description = description,
+                    capacity = capacity,
+                    status = status
+                )
+
+                val result = repo.createEvent(request)
+
+                when (result) {
+                    is ApiResult.Success -> {
+                        val response = result.data
+                        if (response.status == 1) {
+                            callback(true, response.message ?: "Success")
+                        } else {
+                            callback(false, response.message ?: "Failed")
+                        }
+                    }
+                    is ApiResult.Error -> {
+                        callback(false, result.message ?: "Unknown error")
+                    }
+                    else -> Unit
+                }
+
+            } catch (e: Exception) {
+                callback(false, e.localizedMessage ?: "Unknown error")
+            }
+        }
+    }
+
+    private val _stats = MutableStateFlow<Stats?>(null)
+    val stats: StateFlow<Stats?> get() = _stats
+
+    private val _statsLoading = MutableStateFlow(false)
+    val statsLoading: StateFlow<Boolean> get() = _statsLoading
+
+    fun loadStatistics() {
+        viewModelScope.launch {
+            _statsLoading.value = true
+            when (val result = repo.getStatistics()) {
+                is ApiResult.Success -> {
+                    _stats.value = result.data.data
+                }
+                is ApiResult.Error -> {
+                    _stats.value = null
+                }
+                is ApiResult.Loading -> {
+                    _stats.value = null
+                }
+            }
+
+            _statsLoading.value = false
+        }
+    }
+
+
 }
