@@ -1,15 +1,26 @@
 package com.example.eventappmanagement.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.eventappmanagement.EventViewModel
+import com.example.eventappmanagement.ui.screen.AddEventScreen
 import com.example.eventappmanagement.ui.screen.AllEventsScreen
+import com.example.eventappmanagement.ui.screen.DetailEventScreen
+import com.example.eventappmanagement.ui.screen.EventByDateRangeScreen
+import com.example.eventappmanagement.ui.screen.EventByIdScreen
 import com.example.eventappmanagement.ui.screen.HomeScreen
+import com.example.eventappmanagement.ui.screen.UpdateEventScreen
 
 object NavRoutes {
     const val HOME = "home"
     const val ALL_EVENTS = "all_events"
+    const val EVENT_BY_ID = "event_by_id/{id}"
+    const val EVENT_BY_DATE = "event_by_date"
+    const val EVENT_DETAIL = "event_detail/{eventId}"
+    const val CREATE_EVENT = "create"
 }
 
 
@@ -27,6 +38,54 @@ fun AppNavigation(nav: NavHostController) {
             )
         }
 
+        composable(NavRoutes.EVENT_BY_ID) { backStack ->
+            val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
+            EventByIdScreen(
+                id = id,
+                onEventClick = { eventId ->
+                    nav.navigate("event_detail/$eventId")
+                }
+            )
+        }
+
+        composable(NavRoutes.EVENT_BY_DATE) {
+            EventByDateRangeScreen(
+                nav = nav,
+                onEventClick = { id ->
+                    nav.navigate("event_detail/$id")
+                }
+            )
+        }
+
+        composable(NavRoutes.EVENT_DETAIL) { backStackEntry ->
+            val eventId = backStackEntry.arguments?.getString("eventId")?.toIntOrNull() ?: 0
+            DetailEventScreen(
+                eventId = eventId,
+                onBack = { nav.popBackStack() },
+                onUpdate = { id -> nav.navigate("update_event/$id") },
+                onDelete = { id ->  }
+            )
+        }
+
+        composable("update_event/{eventId}") { backStackEntry ->
+            val eventId = backStackEntry.arguments?.getString("eventId")?.toIntOrNull() ?: 0
+            UpdateEventScreen(
+                eventId = eventId,
+                onBack = { nav.popBackStack() },
+                onUpdateComplete = { nav.navigate(NavRoutes.HOME) }
+            )
+        }
+
+        composable(NavRoutes.CREATE_EVENT) {
+            val vm: EventViewModel = viewModel()
+            AddEventScreen(
+                viewModel = vm,
+                onBack = { nav.popBackStack() },
+                onSuccess = {
+                    nav.popBackStack()
+                }
+            )
+        }
 
     }
 }

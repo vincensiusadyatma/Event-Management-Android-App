@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.eventappmanagement.EventViewModel
-import com.example.eventappmanagement.data.model.Event
 import com.example.eventappmanagement.data.remote.response.MultiEventResponse
 import com.example.eventappmanagement.data.result.ApiResult
 import com.example.eventappmanagement.ui.component.EventCard
@@ -59,9 +58,7 @@ fun AllEventsScreen(
             )
 
             is ApiResult.Error ->
-
             {
-
                 Log.e("ERROR FETCH:" , "${(state as ApiResult.Error).message}")
                 Text(
                     "Error: ${(state as ApiResult.Error).message}",
