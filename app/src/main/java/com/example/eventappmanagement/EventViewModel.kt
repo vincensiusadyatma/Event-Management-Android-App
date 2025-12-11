@@ -47,18 +47,43 @@ class EventViewModel : ViewModel() {
         }
     }
 
-    fun updateEvent(id: Int, request: EventRequest) {
+    fun updateEvent(
+        id: Int,
+        title: String,
+        date: String,
+        time: String,
+        location: String,
+        description: String?,
+        capacity: Int,
+        status: String,
+        callback: (Boolean, String) -> Unit
+    ) {
         viewModelScope.launch {
             try {
+                val request = EventRequest(
+                    title = title,
+                    date = date,
+                    time = time,
+                    location = location,
+                    description = description,
+                    capacity = capacity,
+                    status = status
+                )
+
                 repo.updateEvent(id, request)
+
+                // Update ulang daftar event
                 _events.value = ApiResult.Loading
                 loadEvents()
+
+                callback(true, "Event updated successfully")
+
             } catch (e: Exception) {
-                Log.e("EventViewModel", "Update failed", e)
-                _events.value = ApiResult.Error(e.message ?: "Update failed")
+                callback(false, e.message ?: "Failed to update event")
             }
         }
     }
+
 
     fun deleteEvent(id: Int, onDeleteComplete: () -> Unit) {
         viewModelScope.launch {
