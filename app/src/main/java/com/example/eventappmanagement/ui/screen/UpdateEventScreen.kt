@@ -25,7 +25,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.eventappmanagement.EventViewModel
-import com.example.eventappmanagement.data.remote.request.EventRequest
 import com.example.eventappmanagement.data.remote.response.SingleEventResponse
 import com.example.eventappmanagement.data.result.ApiResult
 import com.example.eventappmanagement.ui.component.DropdownField

@@ -33,12 +33,12 @@ fun AddEventScreen(
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
-    // DATE FIELD (DD / MM / YYYY)
+    // DATE FIELD
     var day by remember { mutableStateOf("") }
     var month by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
 
-    // TIME FIELD (HH / MM / SS)
+    // TIME FIELD
     var hour by remember { mutableStateOf("") }
     var minute by remember { mutableStateOf("") }
     var second by remember { mutableStateOf("") }

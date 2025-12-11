@@ -1,5 +1,4 @@
 package com.example.eventappmanagement.ui.screen
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
@@ -55,11 +53,6 @@ fun HomeScreen(nav: NavController, vm: EventViewModel = viewModel()) {
             text = "Event Manager",
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = "Kelola, cari, dan buat event dengan mudah.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
 
